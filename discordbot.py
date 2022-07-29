@@ -1,16 +1,17 @@
 from constants import _DiscordAUTH, _DISCORDCHANNELID
-import discord
 from discord.ext.commands import Bot
 import time, asyncio
 
 BOT_PREFIX = ["."]
-client = Bot(command_prefix=BOT_PREFIX)
+
+def setup():
+    global client
+    client = Bot(command_prefix=BOT_PREFIX)
+
 @client.event
 async def on_message(message):
     if message.author == client.user:
         return
-
-
 
 
 @client.event
@@ -20,18 +21,21 @@ async def on_ready():
     print(client.user.id)
     print('------')
     await start()
-    while True:
-        currentTime = time.strftime("%M%S", time.gmtime(time.time()))
-        if currentTime == "30:00":
-            await start()
-        await asyncio.sleep(1)
 
 
 async def start():
     global mainChannel
     mainChannel = client.get_channel(_DISCORDCHANNELID)
+    if(mainChannel == None):
+        print("Main Channel Is Non Exsistant...")
+        return
+
     print(mainChannel.name)
-    await client.send_message(mainChannel, "Starting countdown", tts = True)
+    await mainChannel.send('Im Up & Active! \n')
+
+
+async def sendMessage(STR):
+    mainChannel.send(STR)
 
 
 
