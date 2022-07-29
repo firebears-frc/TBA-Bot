@@ -7,6 +7,8 @@ import time
 
 from constants import _TBAKEY , _TEAMKEY
 
+MatchNum = 0
+
 def getReq(key,link):
     headers = {
         "accept":"application/json",
@@ -41,11 +43,20 @@ class TBAAPI:
     def getEventMatches(self):
         if self.match == {}: return
         matchData = getReq(self.key,"/event/" + self.match["key"] + "/matches/simple")
-        #print(matchData)
+        return matchData
+
+    def getCurMatch(self):
         ms = round(time.time() * 1000)
-        
+        matches = sorted(self.getEventMatches(), key=lambda d: d['match_number']) 
+        for match in matches:
+            t = (match["actual_time"] - ms)
+            print(str(match["match_number"]) + " has started? : " + str(t))
+            if(t <= 250):
+                global MatchNum
+                MatchNum = match["match_number"]
 
 
 
 api = TBAAPI()
-api.getEventMatches()
+api.getCurMatch()
+print(MatchNum)
