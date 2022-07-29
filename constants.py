@@ -1,0 +1,2 @@
+_DiscordAUTH = ""
+_DISCORDCHANNELID = ""
